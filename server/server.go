@@ -42,7 +42,7 @@ func echoServiceHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		log.Printf("%s sent: %s\n", conn.RemoteAddr(), string(msg))
+		log.Printf("client %s sent: %s\n", conn.RemoteAddr(), string(msg))
 
 		if err = conn.WriteMessage(msgType, msg); err != nil {
 			log.Println(err)

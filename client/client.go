@@ -40,14 +40,14 @@ func main() {
 
 	// Start a go routine to read the message from server
 	go func() {
-		defer close(done)
+		defer close(done) // invoked when client can't read from server
 		for {
 			_, msg, err := conn.ReadMessage()
 			if err != nil {
-				log.Println(err)
+				log.Println("read error:", err)
 				return
 			}
-			log.Printf("received message: %s", string(msg))
+			log.Printf("received from server: %s", string(msg))
 		}
 	}()
 
@@ -62,11 +62,14 @@ func main() {
 		case t := <-ticker.C:
 			err := conn.WriteMessage(websocket.TextMessage, []byte(t.String()))
 			if err != nil {
-				log.Println(err)
+				log.Println("write error:", err)
 				return
 			}
 		case <-interrupt:
 			log.Println("interrupted")
+
+			// Gracefully close the connection by sending a close message and then,
+			// wait (with timeout) for the server to close the connection
 			err := conn.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseGoingAway, ""))
 			if err != nil {
 				log.Println(err)
