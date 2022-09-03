@@ -1,4 +1,4 @@
-# Websockets in Go
+# Basic echo application with websockets
 This repo contains a very barebones implementation of a Websocket client and server in Go with the intention to understand how websockets work.
 
 ## How to run the code
